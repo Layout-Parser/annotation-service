@@ -2,3 +2,6 @@
 	path = src/label-studio
 	url = git@github.com:lolipopshock/label-studio.git
 	branch = tmp-0.7.3
+[submodule "src/label-studio-converter"]
+	path = src/label-studio-converter
+	url = git@github.com:lolipopshock/label-studio-converter.git
