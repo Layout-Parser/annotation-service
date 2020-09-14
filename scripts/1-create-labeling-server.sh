@@ -29,7 +29,7 @@ label-studio init $target_folder \
                 --input-path=$source_folder \
                 --input-format=image-dir \
                 --allow-serving-local-files --force \
-                --label-config=configs/$config \
+                --label-config=$config \
                 --port 8899
 
 cd ./tools 
