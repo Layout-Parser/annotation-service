@@ -18,10 +18,16 @@ from label_studio.ml import LabelStudioMLBase
 from label_studio.ml.utils import get_single_tag_keys, get_choice, is_skipped
 
 
+import sys
+sys.path.append(os.path.expanduser('./src/Detectron2_AL/src'))
+from detectron2_al.configs import get_cfg
+from detectron2_al.engine.al_engine import ActiveLearningPredictor
+from detectron2_al.modeling import *
+import layoutparser as lp
+from fvcore.common.file_io import PathManager
+
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
-
-import layoutparser as lp
 
 image_cache_dir = os.path.join(os.path.dirname(__file__), 'image-cache')
 os.makedirs(image_cache_dir, exist_ok=True)
@@ -52,6 +58,11 @@ def load_image_from_url(url):
 def convert_block_to_value(block, image_height, image_width):
 
 
+    block.block.x_1 = max(0, block.block.x_1)
+    block.block.x_2 = min(block.block.x_2, image_width)
+    block.block.y_1 = max(0, block.block.y_1)
+    block.block.y_2 = min(block.block.y_2, image_height)
+
     return  {
             "height": block.height / image_height*100,
             "rectanglelabels": [str(block.type)],
@@ -59,9 +70,93 @@ def convert_block_to_value(block, image_height, image_width):
             "width":  block.width / image_width*100,
             "x":      block.coordinates[0] / image_width*100,
             "y":      block.coordinates[1] / image_height*100,
-            "score":  block.score
+            "score":  block.score_al*100
         }
 
+
+class Detectron2LayoutModel():
+
+    def __init__(self, config_path,
+                       model_path = None,
+                       label_map  = None,
+                       extra_config= []):
+
+        cfg = get_cfg()
+        config_path = PathManager.get_local_path(config_path)
+        cfg.merge_from_file(config_path)
+        cfg.merge_from_list(extra_config)
+        
+        cfg.MODEL.ROI_HEADS.NAME = 'ROIHeadsAL'
+        cfg.MODEL.META_ARCHITECTURE = 'ActiveLearningRCNN'
+
+        if model_path is not None:
+            cfg.MODEL.WEIGHTS = model_path            
+        cfg.MODEL.DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+        self.cfg = cfg
+        self.label_map = label_map
+        self._create_model()
+    
+    def _create_model(self):
+        self.model = ActiveLearningPredictor(self.cfg)
+
+    def gather_output(self, outputs):
+
+        instance_pred = outputs['instances'].to("cpu")
+
+        layout = lp.Layout()
+        scores = instance_pred.scores.tolist()
+        boxes  = instance_pred.pred_boxes.tensor.tolist()
+        labels = instance_pred.pred_classes.tolist()
+
+        for score, box, label in zip(scores, boxes, labels):
+            x_1, y_1, x_2, y_2 = box
+
+            if self.label_map is not None:
+                label = self.label_map.get(label, label)
+
+            cur_block = lp.TextBlock(
+                    lp.Rectangle(x_1, y_1, x_2, y_2),
+                    type=label, 
+                    score=score)
+            layout.append(cur_block)
+
+        return layout
+
+    def gather_output_with_stats(self, outputs):
+
+        instance_pred = outputs['instances'].to("cpu")
+
+        layout = lp.Layout()
+        scores = instance_pred.scores.tolist()
+        scores_al = instance_pred.scores_al.tolist()
+        boxes  = instance_pred.pred_boxes.tensor.tolist()
+        labels = instance_pred.pred_classes.tolist()
+
+        for score, box, label, score_al in zip(scores, boxes, labels, scores_al):
+            x_1, y_1, x_2, y_2 = box
+
+            if self.label_map is not None:
+                label = self.label_map.get(label, label)
+
+            cur_block = lp.TextBlock(
+                    lp.Rectangle(x_1, y_1, x_2, y_2),
+                    type=label, 
+                    score=score)
+            cur_block.score_al = score_al
+            layout.append(cur_block)
+
+        return layout
+
+    def detect(self, image):
+        outputs, _ = self.model(image)
+        layout  = self.gather_output(outputs)
+        return layout
+
+    def detect_al(self, image):
+        pred = self.model(image)
+        layout  = self.gather_output_with_stats(pred)
+        return layout
 
 class ObjectDetectionAPI(LabelStudioMLBase):
 
@@ -73,13 +168,14 @@ class ObjectDetectionAPI(LabelStudioMLBase):
             get_single_tag_keys(self.parsed_label_config, 'RectangleLabels', 'Image')
         self.freeze_extractor = freeze_extractor
     
-        self.model = lp.Detectron2LayoutModel(
+        self.model = Detectron2LayoutModel(
             config_path ='https://www.dropbox.com/s/<>/config.yaml?dl=1',
             model_path  ='https://www.dropbox.com/s/<>/model_final.pth?dl=1',
             extra_config=["MODEL.ROI_HEADS.NMS_THRESH_TEST", 0.2,
-                          "MODEL.ROI_HEADS.SCORE_THRESH_TEST", 0.8],
-            label_map={0: 'xx'}
-        )
+                          "MODEL.ROI_HEADS.SCORE_THRESH_TEST", 0.8,
+                          "AL.PERTURBATION.VERSION", 4],
+            label_map={0: 'xx'}           
+            )
 
     def reset_model(self):
         ## self.model = ImageClassifier(len(self.classes), self.freeze_extractor)
@@ -89,7 +185,7 @@ class ObjectDetectionAPI(LabelStudioMLBase):
 
         image_urls = [task['data'][self.value] for task in tasks]
         images = [load_image_from_url(url) for url in image_urls]
-        layouts = [self.model.detect(image) for image in images]  
+        layouts = [self.model.detect_al(image) for image in images]  
 
         predictions = []
         for image, layout in zip(images, layouts):
