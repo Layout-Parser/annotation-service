@@ -10,7 +10,7 @@ print_usage() {
 
 source_folder=''
 modeling_folder=''
-while getopts 's:l:h' flag; do
+while getopts 's:m:h' flag; do
   case "${flag}" in
     s) session_name="${OPTARG}" ;;
     m) modeling_folder="labeling/${OPTARG}" ;;
