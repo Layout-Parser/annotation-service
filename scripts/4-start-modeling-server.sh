@@ -8,7 +8,7 @@ print_usage() {
   printf "use -m to specify the modeling folder (without starting `labeling/`). \n"
 }
 
-source_folder=''
+session_name=''
 modeling_folder=''
 while getopts 's:m:h' flag; do
   case "${flag}" in

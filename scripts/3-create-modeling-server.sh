@@ -20,4 +20,4 @@ while getopts 's:t:h' flag; do
 done
 
 
-label-studio-ml $folder --script $script 
+label-studio-ml init $folder --script $script --force

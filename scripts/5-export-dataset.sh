@@ -11,7 +11,7 @@ export_folder=''
 labeling_folder=''
 while getopts 'e:l:h' flag; do
   case "${flag}" in
-    e) session_name="${OPTARG}" ;;
+    e) export_folder="${OPTARG}" ;;
     l) labeling_folder="labeling/${OPTARG}" ;;
     h) print_usage
        exit 1 ;;
@@ -22,4 +22,5 @@ python tools/generate_coco_dataset.py \
     --labeling_folder $labeling_folder \
     --export_folder $export_folder
 
+rm -r $export_folder/images
 cp -r data $export_folder/data

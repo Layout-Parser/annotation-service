@@ -19,5 +19,5 @@ while getopts 's:l:h' flag; do
   esac
 done
 
-screen -S $session_name -d -m -- sh -c "label-studio start ${labeling_folder}"
+screen -S $session_name -d -m bash -c "label-studio start ${labeling_folder}"
 screen -dmS $session_name-sync
