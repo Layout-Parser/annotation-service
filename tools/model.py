@@ -76,6 +76,8 @@ class ObjectDetectionAPI(LabelStudioMLBase):
         self.model = lp.Detectron2LayoutModel(
             config_path ='https://www.dropbox.com/s/<>/config.yaml?dl=1',
             model_path  ='https://www.dropbox.com/s/<>/model_final.pth?dl=1',
+            ### PLEASE REMEMBER TO CHANGE `dl=0` INTO `dl=1` IN THE END 
+            ### OF DROPBOX LINKS 
             extra_config=["MODEL.ROI_HEADS.NMS_THRESH_TEST", 0.2,
                           "MODEL.ROI_HEADS.SCORE_THRESH_TEST", 0.8],
             label_map={0: 'xx'}

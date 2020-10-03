@@ -1,0 +1,2 @@
+layoutparser
+google-api-core

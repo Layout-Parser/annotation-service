@@ -3,25 +3,31 @@
 You can download this tool via:
 
 ```bash
-git clone --recurse-submodules -j8 git@github.com:dell-research-harvard/labeling-toolkit-template.git
+git clone --recurse-submodules git@github.com:dell-research-harvard/labeling-toolkit-template.git
 ```
 
 ## Installation
 
-1. Install the label-studio tool via: 
+1. Install the necessary dependencies via: 
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+2. Install the label-studio tool via: 
 
     ```bash
     cd src/label-studio
     pip install -U -e .
     ```
 
-2. Install the appropriate Detectron2 Version:
+3. Install the appropriate Detectron2 Version:
 
     ```bash
-    pip install -U detectron2=0.1.1 -f \
+    pip install -U detectron2==0.1.1 -f \
         https://dl.fbaipublicfiles.com/detectron2/wheels/cpu/torch1.4/index.html
     ```
     And you can consider install the GPU version referring to the [official instructions](https://detectron2.readthedocs.io/tutorials/install.html). But you need to specify the version number **0.1.1** when installing.
+
 
 ## Create a labeling server
 
