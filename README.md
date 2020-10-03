@@ -28,6 +28,11 @@ git clone --recurse-submodules git@github.com:dell-research-harvard/labeling-too
     ```
     And you can consider install the GPU version referring to the [official instructions](https://detectron2.readthedocs.io/tutorials/install.html). But you need to specify the version number **0.1.1** when installing.
 
+    In our case, if you see any issues in the GPU server, you could use the following command to reinstall the detectron2:
+    ```bash
+    pip install -U detectron2==0.1.1 -f \
+        https://dl.fbaipublicfiles.com/detectron2/wheels/cu101/torch1.4/index.html
+    ```
 
 ## Create a labeling server
 
@@ -57,8 +62,12 @@ git clone --recurse-submodules git@github.com:dell-research-harvard/labeling-too
     ```bash
     screen -r labeling-sync
     cd scripts 
-    bash ./0-dropbox-sync xx-labeling xx-server-addr
+    bash ./0-dropbox-sync.sh xx-labeling xx-dropbox-dir
     ```
+    Please note: 
+    - The `xx-dropbox-dir` is the path after `home/` in a dropbox link. For example, if you have a dropbox folder link like: `https://www.dropbox.com/home/Label-Studio-Labeling/2010_test`, the `xx-drop-dir` is then `Label-Studio-Labeling/2010_test`. 
+    
+    - You may want to create the folder on dropbox before you start the sync process. 
 
 ## Create the model prediction server 
 
@@ -110,3 +119,14 @@ git clone --recurse-submodules git@github.com:dell-research-harvard/labeling-too
         -s modeling-al \
         -m xx-labeling-backend-al 
     ```
+
+## Export the dataset and start training 
+
+1. Export the labeled samples and create a COCO dataset 
+
+    ```bash
+        cd scripts
+        bash ./5-export-dataset.sh -e export -l xx-labeling
+    ```
+
+2. You can then transfer it to another model training servers, and use this dataset to train a new deep layout detection model. 
