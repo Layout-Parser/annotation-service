@@ -1,10 +1,9 @@
 [submodule "src/label-studio"]
 	path = src/label-studio
-	url = git@github.com:dell-research-harvard/label-studio.git
-	branch = tmp-0.7.3
+	url = git@github.com:lolipopshock/label-studio.git
 [submodule "src/label-studio-converter"]
 	path = src/label-studio-converter
 	url = git@github.com:dell-research-harvard/label-studio-converter.git
 [submodule "src/Detectron2_AL"]
 	path = src/Detectron2_AL
-	url = git@github.com:dell-research-harvard/Detectron2_AL.git
+	url = git@github.com:lolipopshock/Detectron2_AL.git
