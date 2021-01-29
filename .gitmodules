@@ -1,6 +1,6 @@
 [submodule "src/label-studio"]
 	path = src/label-studio
-	url = git@github.com:lolipopshock/label-studio.git
+	url = git@github.com:Layout-Parser/label-studio.git
 [submodule "src/label-studio-converter"]
 	path = src/label-studio-converter
 	url = git@github.com:dell-research-harvard/label-studio-converter.git
