@@ -8,7 +8,7 @@ git clone --recurse-submodules git@github.com:Layout-Parser/annotation-service.g
 
 ## Docker
 
-Generate the labeling and  modeling servers via Docker, using the below commands. 
+Generate the labeling and  modeling servers via Docker, using the below commands.
 
 You may need to change Docker memory limits with `--memory` flag.
 

@@ -1,4 +1,4 @@
-# folrder
+# folder
 data
 data/
 data*/
@@ -10,8 +10,6 @@ model
 model/
 result
 result*/
-labeling/
-labeling*/
 
 # Mac Finder Configurations
 .DS_Store
