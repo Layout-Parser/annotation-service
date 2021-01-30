@@ -29,8 +29,8 @@ docker run --rm -p 8080:8080 \
 ```bash
 docker build -f modeling/Dockerfile \
     -t annotation-service:modeling \
-    --build-arg MODEL_CONFIG=https://www.dropbox.com/s/raubm858djy3u17/config.yaml?dl=1 \
-    --build-arg MODEL_WEIGHTS=https://www.dropbox.com/s/bitxe8occzb865u/model_final.pth?dl=1 \
+    --build-arg MODEL_CONFIG=xxxxx/config.yaml?dl=1 \
+    --build-arg MODEL_WEIGHTS=xxxxx/model_final.pth?dl=1 \
     --build-arg LABEL_MAP="0 headline 1 article 2 newspaper_header 3 masthead 4 author 5 photograph 6 image_caption 7 page_number 8 table 9 cartoon_or_advertisement" \
     . && \
 docker run --rm -p 9090:9090 \
