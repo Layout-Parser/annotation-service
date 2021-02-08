@@ -10,10 +10,24 @@ services:
       - 8080:8080
     depends_on:
       - modeling
+    volumes: 
+      - type: bind
+        source: ./data
+        target: /data
+    command: > 
+      bash -c "
+      label-studio init labeling/newspaper_labeling 
+      --input-path=/data 
+      --input-format=image-dir 
+      --allow-serving-local-files 
+      --force 
+      --label-config=configs/labeling-config.xml 
+      --port 8080 
+      --ml-backends http://asm:9090 &&
+      label-studio start labeling/newspaper_labeling 
+      --port 8080 
+      --log-level DEBUG"
     restart: always
-    volumes:
-    - ./data:/testing-labeling/data
-    command: "label-studio start labeling/newspaper_labeling --port 8080 --log-level DEBUG"
   modeling:
     container_name: asm
     build: 
@@ -21,7 +35,15 @@ services:
       dockerfile: Dockerfile
     ports: 
       - 9090:9090
+    volumes: 
+      - type: bind
+        source: ./data
+        target: /data
+    command: >
+      bash -c "
+      label-studio-ml init labeling/var_backend 
+      --script configs/model.py 
+      --force &&
+      label-studio-ml start labeling/var_backend 
+      --port 9090"
     restart: always
-    volumes:
-    - ./data:/testing-modeling/data
-    command: "label-studio-ml start labeling/var_backend --port 9090"

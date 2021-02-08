@@ -13,9 +13,4 @@ RUN pip install -U 'git+https://github.com/facebookresearch/fvcore'
 
 COPY configs /testing-modeling/configs
 
-VOLUME /data
-
 EXPOSE 9090
-
-RUN label-studio-ml init labeling/var_backend \
-    --script configs/model.py --force
