@@ -23,7 +23,7 @@ services:
       --force 
       --label-config=configs/labeling-config.xml 
       --port 8080 
-      --ml-backends http://labeling_container:9090 &&
+      --ml-backends http://modeling_container:9090 &&
       label-studio start labeling 
       --port 8080 
       --log-level DEBUG"
