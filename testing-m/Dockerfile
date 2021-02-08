@@ -17,5 +17,3 @@ EXPOSE 9090
 
 RUN label-studio-ml init labeling/var_backend \
     --script configs/model.py --force
-
-# CMD label-studio-ml start labeling/var_backend --port 9090

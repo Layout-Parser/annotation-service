@@ -13,6 +13,8 @@ services:
     depends_on:
       - modeling
     restart: always
+    volumes:
+      - ./data:/testing-labeling/data
   modeling:
     container_name: asm
     build: 
@@ -23,3 +25,5 @@ services:
     ports: 
       - 9090:9090
     restart: always
+    volumes:
+      - ./data:/testing-labeling/data
