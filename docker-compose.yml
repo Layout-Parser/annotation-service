@@ -1,10 +1,4 @@
-version: "3.5"
-
-x-services-volume:
-  &services-volume
-  type: bind
-  source: ./data
-  target: /testing-labeling/data
+version: "3"
 
 services:
   labeling:
@@ -12,22 +6,22 @@ services:
     build: 
       context: testing-l
       dockerfile: Dockerfile
-    command: "label-studio start labeling/newspaper_labeling --port 8080 --log-level DEBUG"
     ports: 
       - 8080:8080
     depends_on:
       - modeling
     restart: always
-    volumes: 
-      - *services-volume
+    volumes:
+    - ./data:/testing-labeling/data
+    command: "label-studio start labeling/newspaper_labeling --port 8080 --log-level DEBUG"
   modeling:
     container_name: asm
     build: 
       context: testing-m
       dockerfile: Dockerfile
-    command: "label-studio-ml start labeling/var_backend --port 9090"
     ports: 
       - 9090:9090
     restart: always
-    volumes: 
-      - *services-volume
+    volumes:
+    - ./data:/testing-modeling/data
+    command: "label-studio-ml start labeling/var_backend --port 9090"

@@ -13,10 +13,12 @@ RUN pip install git+https://github.com/heartexlabs/label-studio.git
 # COPY data /testing-labeling/data
 COPY configs /testing-labeling/configs
 
+VOLUME /data
+
 EXPOSE 8080
 
 RUN label-studio init labeling/newspaper_labeling/ \
-    --input-path=data --input-format=image-dir \
+    --input-path=/data --input-format=image-dir \
     --allow-serving-local-files --force \
     --label-config=configs/labeling-config.xml \
     --port 8080 --ml-backends http://asm:9090
