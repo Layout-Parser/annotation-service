@@ -1,7 +1,7 @@
 # folder
-data
-data/
-data*/
+# data
+# data/
+# data*/
 generated/
 generated*/
 credential
