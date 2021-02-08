@@ -19,7 +19,7 @@ RUN label-studio init labeling/newspaper_labeling/ \
     --input-path=data --input-format=image-dir \
     --allow-serving-local-files --force \
     --label-config=configs/labeling-config.xml \
-    --port 8080 --ml-backends http://host.docker.internal:9090
+    --port 8080 --ml-backends http://localhost:9090
 
 #CMD label-studio start labeling/newspaper_labeling \
 #    --port 8080

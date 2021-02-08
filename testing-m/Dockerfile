@@ -9,6 +9,7 @@ RUN python -m pip install 'git+https://github.com/facebookresearch/detectron2.gi
 COPY requirements2.txt /testing-modeling
 RUN pip install -r requirements2.txt
 RUN pip install git+https://github.com/heartexlabs/label-studio.git
+RUN pip install -U 'git+https://github.com/facebookresearch/fvcore'
 
 COPY configs /testing-modeling/configs
 
