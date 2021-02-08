@@ -1,4 +1,10 @@
-version: "3"
+version: "3.5"
+
+x-services-volume:
+  &services-volume
+  type: bind
+  source: ./data
+  target: /testing-labeling/data
 
 services:
   labeling:
@@ -12,8 +18,7 @@ services:
     depends_on:
       - modeling
     restart: always
-    volumes:
-      - ./data:/testing-labeling/data
+    volumes: *services-volume
   modeling:
     container_name: asm
     build: 
@@ -23,5 +28,4 @@ services:
     ports: 
       - 9090:9090
     restart: always
-    volumes:
-      - ./data:/testing-labeling/data
+    volumes: *services-volume
