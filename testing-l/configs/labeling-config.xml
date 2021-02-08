@@ -1,0 +1,22 @@
+<View style="display: flex;">
+
+    <View style="width: 150px; padding: 0 1em; margin-right: 0.5em; background: #f1f1f1; border-radius: 3px">
+    <RectangleLabels name="label" toName="image" canRotate="true">
+        <Label value="newspaper_header" background="blue"></Label>
+        <Label value="masthead" background="blue"></Label>
+        <Label value="article" background="green"></Label>
+        <Label value="headline" background="yellow"></Label>
+	    <Label value="author" background="cyan"></Label>        
+        <Label value="photograph" background="purple"></Label>
+        <Label value="cartoon_or_advertisement" background="red"></Label>      
+        <Label value="image_caption" background="pink"></Label>
+        <Label value="page_number" background="grey"></Label>
+        <Label value="table" background="grey"></Label>
+    </RectangleLabels>
+    </View>
+
+    <Image name="image" value="$image"
+        zoom="true" zoomControl="true" 
+        negativeZoom="true" maxWidth="1440px">
+    </Image>
+</View>

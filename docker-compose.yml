@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  labeling:
+    container_name: asl
+    build: 
+      network: host
+      context: testing-l
+      dockerfile: Dockerfile
+    command: "label-studio start labeling/newspaper_labeling --port 8080 --log-level DEBUG"
+    ports: 
+      - 8080:8080
+    depends_on:
+      - modeling
+    restart: always
+  modeling:
+    container_name: asm
+    build: 
+      network: host
+      context: testing-m
+      dockerfile: Dockerfile
+    command: "label-studio-ml start labeling/var_backend --port 9090"
+    ports: 
+      - 9090:9090
+    restart: always
