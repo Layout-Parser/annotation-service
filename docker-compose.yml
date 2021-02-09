@@ -12,7 +12,7 @@ services:
       - modeling
     volumes: 
       - type: bind
-        source: ./data
+        source: ${DATA:-./data}
         target: /data
     command: > 
       bash -c "
@@ -21,7 +21,7 @@ services:
       --input-format=image-dir 
       --allow-serving-local-files 
       --force 
-      --label-config=configs/labeling-config.xml 
+      --label-config=configs/${CONFIG:-labeling-config.xml}
       --port 8080 
       --ml-backends http://modeling_container:9090 &&
       label-studio start labeling 
@@ -37,12 +37,12 @@ services:
       - 9090:9090
     volumes: 
       - type: bind
-        source: ./data
+        source: ${DATA:-./data}
         target: /data
     command: >
       bash -c "
       label-studio-ml init modeling_backend 
-      --script tools/model.py 
+      --script tools/${MODEL:-model.py}
       --force &&
       label-studio-ml start modeling_backend 
       --port 9090"
