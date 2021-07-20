@@ -16,7 +16,7 @@ We package all the layout annotation service (the annotation interface and activ
     DATA=./data CONFIG=labeling-config.xml MODEL=model.py docker-compose up --build -d
     ```
 5. Go to [localhost:8080](localhost:8080) and start annotating. 
-6. Export the completed annotations via Label-Studio's [export function](http://localhost:8080/export).
+6. Export the completed annotations via Label-Studio's [export function](http://localhost:8080/export), or you can find the annotation folder directly at [`labeled`](./labeled). 
 
 ## Configuration
 
