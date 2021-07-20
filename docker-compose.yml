@@ -10,11 +10,11 @@ services:
     depends_on:
       - modeling
     volumes: 
-      - ./labeling:/annotation_service_labeling
       - ${DATA:-./data}:/data
+      - ./labeled:/labeled
     command: > 
       bash -c "
-      label-studio init ./labeling_dir 
+      label-studio init /labeled
       --input-path=/data 
       --input-format=image-dir 
       --allow-serving-local-files 
@@ -22,7 +22,7 @@ services:
       --label-config=configs/${CONFIG:-horizontal-layout.xml} 
       --port 8080 
       --ml-backends http://modeling_container:9090 &&
-      label-studio start ./labeling_dir 
+      label-studio start /labeled
       --port 8080 
       --log-level DEBUG"
     restart: always
@@ -32,8 +32,6 @@ services:
       context: ./modeling
     ports: 
       - 9090:9090
-    volumes: 
-      - ./modeling:/annotation_service_modeling
     command: >
       bash -c "
       label-studio-ml init modeling_backend 
