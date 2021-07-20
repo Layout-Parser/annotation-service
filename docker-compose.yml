@@ -4,41 +4,34 @@ services:
   labeling:
     container_name: labeling_container
     build: 
-      context: labeling
-      dockerfile: Dockerfile
+      context: ./labeling
     ports: 
       - 8080:8080
     depends_on:
       - modeling
     volumes: 
-      - type: bind
-        source: ${DATA:-./data}
-        target: /data
+      - ${DATA:-./data}:/data
+      - ./labeled:/labeled
     command: > 
       bash -c "
-      label-studio init labeling 
+      label-studio init /labeled
       --input-path=/data 
       --input-format=image-dir 
       --allow-serving-local-files 
       --force 
-      --label-config=configs/${CONFIG:-horizontal-layout.xml}
+      --label-config=configs/${CONFIG:-horizontal-layout.xml} 
       --port 8080 
       --ml-backends http://modeling_container:9090 &&
-      label-studio start labeling 
+      label-studio start /labeled
       --port 8080 
       --log-level DEBUG"
     restart: always
   modeling:
     container_name: modeling_container
     build: 
-      context: modeling
-      dockerfile: Dockerfile
+      context: ./modeling
     ports: 
       - 9090:9090
-    volumes: 
-      - type: bind
-        source: ${DATA:-./data}
-        target: /data
     command: >
       bash -c "
       label-studio-ml init modeling_backend 
