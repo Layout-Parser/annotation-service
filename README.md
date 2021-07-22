@@ -1,5 +1,7 @@
 # Layout Parser Annotation Service
 
+![Illustration of the Anootation Service](./.github/example.png)
+
 ## Usage 
 
 We package all the layout annotation service (the annotation interface and active learning modeling server) inside docker containers. The installation process is very straightforward and simple: 
